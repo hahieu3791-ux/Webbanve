@@ -1,0 +1,123 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Vé của tôi - E-Museum Ticket</title>
+  <link rel="stylesheet" href="./css/variables.css">
+  <link rel="stylesheet" href="./css/style.css">
+  <link rel="stylesheet" href="./css/components.css">
+  <link rel="stylesheet" href="./css/responsive.css">
+  <link rel="stylesheet" href="./css/my-tickets.css">
+</head>
+<body>
+
+  <header>
+    <div class="container nav-container">
+      <a href="./index.html" class="logo">
+        <svg viewBox="0 0 24 24"><path d="M12 2L2 22h20L12 2zm0 3.99L19.53 19H4.47L12 5.99zM13 16h-2v-2h2v2zm0-4h-2V8h2v4z"/></svg>
+        <span>E-Museum Ticket</span>
+      </a>
+      <ul class="nav-links">
+        <li><a href="./index.html" class="nav-link">Trang chủ</a></li>
+        <li><a href="./locations.html" class="nav-link">Địa điểm</a></li>
+        <li><a href="./locations.html?filter=favorites" class="nav-link">Bảo tàng yêu thích</a></li>
+        <li><a href="./my-tickets.html" class="nav-link active">Vé của tôi</a></li>
+      </ul>
+      <div class="nav-auth"></div>
+      <button class="menu-toggle" aria-label="Toggle Menu">
+        <span></span>
+        <span></span>
+        <span></span>
+      </button>
+    </div>
+  </header>
+
+  <div class="nav-overlay"></div>
+
+  <nav class="mobile-nav">
+    <ul class="mobile-links">
+      <li><a href="./index.html" class="mobile-link">Trang chủ</a></li>
+      <li><a href="./locations.html" class="mobile-link">Địa điểm</a></li>
+      <li><a href="./locations.html?filter=favorites" class="mobile-link">Bảo tàng yêu thích</a></li>
+      <li><a href="./my-tickets.html" class="mobile-link active">Vé của tôi</a></li>
+    </ul>
+    <div class="mobile-auth"></div>
+  </nav>
+
+  <main class="container">
+    <div class="section-title" style="margin-bottom: 10px;">
+      <h2>Vé Tham Quan Của Tôi</h2>
+      <p>Danh sách vé điện tử của tài khoản đăng nhập hiện tại</p>
+    </div>
+
+    
+    <div class="empty-state" id="empty-tickets" style="display: none; margin-top: 30px;">
+      <svg class="empty-icon" viewBox="0 0 24 24"><path d="M18 10h-1.25c-.02-2.33-1.89-4.22-4.22-4.25H12v-1.25c0-.41-.34-.75-.75-.75S10.5 4.09 10.5 4.5v1.25H10c-2.33.02-4.22 1.89-4.25 4.22v1.28c-1.39.26-2.5 1.48-2.5 2.97v3.06c0 1.66 1.34 3 3 3h11.5c1.66 0 3-1.34 3-3v-3.06c0-1.49-1.11-2.71-2.5-2.97V10zM12.5 8c1.1 0 2 .9 2 2H12.5V8zM8.5 10c0-1.1.9-2 2-2v2h-2zM5.25 15.5c.41 0 .75.34.75.75s-.34.75-.75.75-.75-.34-.75-.75.34-.75.75-.75zm13.5 0c.41 0 .75.34.75.75s-.34.75-.75.75-.75-.34-.75-.75.34-.75.75-.75z"/></svg>
+      <h3>Bạn chưa đặt bất kỳ vé nào!</h3>
+      <p>Bạn chưa thực hiện bất kỳ giao dịch đặt vé tham quan bảo tàng nào trước đây.</p>
+      <a href="./locations.html" class="btn btn-primary">Khám phá & Đặt vé ngay</a>
+    </div>
+
+    
+    <div class="ticket-list-grid" id="tickets-list-grid" style="display: none;">
+      
+    </div>
+  </main>
+
+  <footer>
+    <div class="container footer-grid">
+      <div class="footer-col">
+        <div class="footer-logo">
+          <svg viewBox="0 0 24 24"><path d="M12 2L2 22h20L12 2zm0 3.99L19.53 19H4.47L12 5.99zM13 16h-2v-2h2v2zm0-4h-2V8h2v4z"/></svg>
+          <span>E-Museum Ticket</span>
+        </div>
+        <p>Hệ thống bán vé tham quan và bảo tàng trực tuyến hàng đầu Việt Nam. Khám phá lịch sử, nghệ thuật và di sản dân tộc dễ dàng.</p>
+      </div>
+      <div class="footer-col">
+        <h4>Liên kết nhanh</h4>
+        <ul>
+          <li><a href="./index.html">Trang chủ</a></li>
+          <li><a href="./locations.html">Địa điểm</a></li>
+          <li><a href="./my-tickets.html">Vé của tôi</a></li>
+        </ul>
+      </div>
+      <div class="footer-col">
+        <h4>Địa điểm nổi bật</h4>
+        <ul>
+          <li><a href="./museum-detail.html?id=lich-su">Bảo Tàng Lịch Sử</a></li>
+          <li><a href="./museum-detail.html?id=my-thuat">Bảo Tàng Mỹ Thuật</a></li>
+          <li><a href="./museum-detail.html?id=dan-toc-hoc">Bảo Tàng Dân Tộc Học</a></li>
+        </ul>
+      </div>
+      <div class="footer-col">
+        <h4>Liên hệ hỗ trợ</h4>
+        <ul>
+          <li style="display: flex; align-items: center; gap: 8px;">
+            <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" style="flex-shrink: 0;"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72 12.84 12.84 0 0 0 .7 2.81 2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45 12.84 12.84 0 0 0 2.81.7A2 2 0 0 1 22 16.92z"></path></svg>
+            <span>Hotline: 1900 1234</span>
+          </li>
+          <li style="display: flex; align-items: center; gap: 8px;">
+            <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" style="flex-shrink: 0;"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"></path><polyline points="22,6 12,13 2,6"></polyline></svg>
+            <span>Email: support@emuseum.vn</span>
+          </li>
+          <li style="display: flex; align-items: center; gap: 8px;">
+            <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" style="flex-shrink: 0;"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"></path><circle cx="12" cy="10" r="3"></circle></svg>
+            <span>Địa chỉ: Hoàn Kiếm, Hà Nội</span>
+          </li>
+        </ul>
+      </div>
+    </div>
+    <div class="container footer-bottom">
+      <p>&copy; 2026 E-Museum Ticket. Bảo lưu mọi quyền.</p>
+      <p>Thiết kế bởi Team CSE703072</p>
+    </div>
+  </footer>
+
+  <script src="./js/storage.js"></script>
+  <script src="./js/utils.js"></script>
+  <script src="./js/api.js"></script>
+  <script src="./js/main.js"></script>
+  <script src="./js/my-tickets.js"></script>
+</body>
+</html>

@@ -1,0 +1,271 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Đặt Vé Thành Công - E-Museum Ticket</title>
+  <link rel="stylesheet" href="./css/variables.css">
+  <link rel="stylesheet" href="./css/style.css">
+  <link rel="stylesheet" href="./css/components.css">
+  <link rel="stylesheet" href="./css/responsive.css">
+  <link rel="stylesheet" href="./css/ticket.css">
+</head>
+<body>
+
+  <header>
+    <div class="container nav-container">
+      <a href="./index.html" class="logo">
+        <svg viewBox="0 0 24 24"><path d="M12 2L2 22h20L12 2zm0 3.99L19.53 19H4.47L12 5.99zM13 16h-2v-2h2v2zm0-4h-2V8h2v4z"/></svg>
+        <span>E-Museum Ticket</span>
+      </a>
+      <ul class="nav-links">
+        <li><a href="./index.html" class="nav-link">Trang chủ</a></li>
+        <li><a href="./locations.html" class="nav-link">Địa điểm</a></li>
+        <li><a href="./locations.html?filter=favorites" class="nav-link">Bảo tàng yêu thích</a></li>
+        <li><a href="./my-tickets.html" class="nav-link">Vé của tôi</a></li>
+      </ul>
+      <div class="nav-auth"></div>
+      <button class="menu-toggle" aria-label="Toggle Menu">
+        <span></span>
+        <span></span>
+        <span></span>
+      </button>
+    </div>
+  </header>
+
+  <div class="nav-overlay"></div>
+
+  <nav class="mobile-nav">
+    <ul class="mobile-links">
+      <li><a href="./index.html" class="mobile-link">Trang chủ</a></li>
+      <li><a href="./locations.html" class="mobile-link">Địa điểm</a></li>
+      <li><a href="./locations.html?filter=favorites" class="mobile-link">Bảo tàng yêu thích</a></li>
+      <li><a href="./my-tickets.html" class="mobile-link">Vé của tôi</a></li>
+    </ul>
+    <div class="mobile-auth"></div>
+  </nav>
+
+  <main class="container">
+    
+    <div id="ticket-error-container" class="empty-state" style="display: none; margin-top: 40px;">
+      <svg class="empty-icon" viewBox="0 0 24 24"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm1 15h-2v-2h2v2zm0-4h-2V7h2v6z"/></svg>
+      <h3>Không tìm thấy hóa đơn đặt vé</h3>
+      <p>Yêu cầu hóa đơn của bạn không hợp lệ hoặc mã đặt vé này không thuộc tài khoản của bạn.</p>
+      <a href="./index.html" class="btn btn-primary">Quay lại Trang chủ</a>
+    </div>
+
+    
+    <div id="ticket-content-container" style="display: none;">
+      <div class="success-banner">
+        <svg class="success-icon" viewBox="0 0 24 24"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-2 15l-5-5 1.41-1.41L10 14.17l7.59-7.59L19 8l-9 9z"/></svg>
+        <h2>Thanh toán thành công!</h2>
+        <p>Mã vé QR đã được tạo lập và gửi tới hòm thư của bạn. Vui lòng xuất trình mã vé tại cổng để quét cửa vào tham quan.</p>
+      </div>
+
+      
+      <div id="ticket-pending-payment-container" style="display: none; max-width: 600px; margin: 0 auto 50px auto;">
+        <div class="card" style="padding: 30px; text-align: center; border: 1px solid rgba(245, 158, 11, 0.3); box-shadow: var(--shadow-md);">
+          <h3 style="font-size: 1.35rem; font-weight: 800; color: var(--color-primary); margin-bottom: 12px; display: flex; align-items: center; justify-content: center; gap: 8px;">
+            <svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" style="color: var(--color-warning);"><rect x="5" y="2" width="14" height="20" rx="2" ry="2"></rect><line x1="12" y1="18" x2="12.01" y2="18"></line></svg>
+            Thanh Toán Để Nhận Vé Điện Tử
+          </h3>
+          <p style="font-size: 0.9rem; color: var(--color-text-muted); margin-bottom: 20px; line-height: 1.5;">
+            Đơn hàng của bạn đang ở trạng thái <strong>Chờ thanh toán</strong>. Vui lòng quét mã VietQR bên dưới hoặc chuyển khoản theo thông tin để kích hoạt và xem vé tham quan.
+          </p>
+
+          <div style="background: #f8fafc; border: 1.5px dashed var(--color-border); border-radius: var(--radius-md); padding: 20px; margin-bottom: 20px; display: flex; flex-direction: column; align-items: center; gap: 15px;">
+            <div id="t-pending-qr-container">
+              
+            </div>
+
+            <div style="width: 100%; text-align: left; font-size: 0.85rem; border-top: 1px solid #f1f5f9; padding-top: 15px;">
+              <div style="display: flex; justify-content: space-between; margin-bottom: 8px;">
+                <span style="color: var(--color-text-muted); font-weight: 500;">Ngân hàng:</span>
+                <span id="t-pending-bank-name" style="font-weight: 700; color: var(--color-primary);"></span>
+              </div>
+              <div style="display: flex; justify-content: space-between; margin-bottom: 8px;">
+                <span style="color: var(--color-text-muted); font-weight: 500;">Số tài khoản:</span>
+                <span id="t-pending-account-no" style="font-weight: 700; color: var(--color-primary);"></span>
+              </div>
+              <div style="display: flex; justify-content: space-between; margin-bottom: 8px;">
+                <span style="color: var(--color-text-muted); font-weight: 500;">Chủ tài khoản:</span>
+                <span id="t-pending-account-name" style="font-weight: 700; color: var(--color-primary);"></span>
+              </div>
+              <div style="display: flex; justify-content: space-between; margin-bottom: 8px;">
+                <span style="color: var(--color-text-muted); font-weight: 500;">Số tiền:</span>
+                <span id="t-pending-amount" style="font-weight: 700; color: var(--color-success); font-size: 1rem;"></span>
+              </div>
+              <div style="display: flex; justify-content: space-between;">
+                <span style="color: var(--color-text-muted); font-weight: 500;">Nội dung chuyển khoản:</span>
+                <span id="t-pending-memo" style="font-weight: 700; color: var(--color-warning);"></span>
+              </div>
+            </div>
+          </div>
+
+          <div style="display: flex; align-items: center; justify-content: center; gap: 8px; margin: 15px 0; font-size: 0.85rem; font-weight: 600; color: var(--color-warning);">
+            <div class="spinner-small" style="border-top-color: var(--color-warning); width: 14px; height: 14px;"></div>
+            <span>Đang chờ chuyển khoản để kích hoạt vé...</span>
+          </div>
+
+          <div style="display: flex; gap: 12px; margin-top: 20px;">
+            <a href="./index.html" class="btn btn-secondary btn-block">Quay lại Trang chủ</a>
+            <button class="btn btn-primary btn-block" id="t-pending-confirm-btn" style="display: flex; align-items: center; justify-content: center; gap: 6px;">
+              <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"></polyline></svg>
+              Tôi đã thanh toán
+            </button>
+          </div>
+        </div>
+      </div>
+      
+      
+      <div class="ticket-wrapper">
+        <div class="ticket-stub">
+          
+          <div class="ticket-left">
+            <div>
+              <span class="ticket-header-title">Vé tham quan điện tử</span>
+              <h3 id="t-museum-name" class="ticket-museum-name" style="margin-top: 8px;"></h3>
+            </div>
+            
+            <div class="ticket-details-grid">
+              <div>
+                <div class="ticket-detail-label">Họ tên khách hàng</div>
+                <div id="t-customer-name" class="ticket-detail-val"></div>
+              </div>
+              
+              <div>
+                <div class="ticket-detail-label">Mã đặt vé</div>
+                <div id="t-booking-id" class="ticket-detail-val" style="color: var(--color-success); font-weight: 700;"></div>
+              </div>
+              
+              <div>
+                <div class="ticket-detail-label">Ngày tham quan</div>
+                <div id="t-date" class="ticket-detail-val"></div>
+              </div>
+              
+              <div>
+                <div class="ticket-detail-label">Khung giờ vào cửa</div>
+                <div id="t-time-slot" class="ticket-detail-val"></div>
+              </div>
+              
+              <div>
+                <div class="ticket-detail-label">Số lượng người đi</div>
+                <div id="t-qty" class="ticket-detail-val"></div>
+              </div>
+              
+              <div>
+                <div class="ticket-detail-label">Tổng tiền vé</div>
+                <div id="t-price" class="ticket-detail-val" style="color: var(--color-success);"></div>
+              </div>
+
+              <div>
+                <div class="ticket-detail-label">Số điện thoại</div>
+                <div id="t-customer-phone" class="ticket-detail-val"></div>
+              </div>
+
+              <div>
+                <div class="ticket-detail-label">Email liên hệ</div>
+                <div id="t-customer-email" class="ticket-detail-val"></div>
+              </div>
+
+              <div>
+                <div class="ticket-detail-label">Thời gian đặt vé</div>
+                <div id="t-created-at" class="ticket-detail-val"></div>
+              </div>
+
+              <div>
+                <div class="ticket-detail-label">Địa chỉ liên hệ</div>
+                <div id="t-customer-address" class="ticket-detail-val"></div>
+              </div>
+            </div>
+            
+            <div class="badge badge-success" style="width: fit-content; font-size: 0.8rem; padding: 8px 16px; display: flex; align-items: center; gap: 6px;">
+              <svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" style="flex-shrink: 0;"><polyline points="20 6 9 17 4 12"></polyline></svg>
+              Vé hợp lệ - Sẵn sàng quét cửa vào cổng
+            </div>
+          </div>
+          
+          
+          <div class="ticket-right">
+            <div class="qr-code-wrapper" id="t-qrcode">
+              
+            </div>
+            <div class="ticket-id-tag" id="t-id-tag"></div>
+            <p style="font-size: 0.75rem; text-align: center; color: rgba(255,255,255,0.4); font-weight: 500; max-width: 160px; line-height: 1.4;">
+              Quét mã tại cổng soát vé để vào cửa tham quan
+            </p>
+          </div>
+        </div>
+        
+        
+        <div class="actions-row">
+          <button class="btn btn-secondary" id="print-btn">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="margin-right: 4px;">
+              <polyline points="6 9 6 2 18 2 18 9"></polyline>
+              <path d="M6 18H4a2 2 0 0 1-2-2v-5a2 2 0 0 1 2-2h16a2 2 0 0 1 2 2v5a2 2 0 0 1-2 2h-2"></path>
+              <rect x="6" y="14" width="12" height="8"></rect>
+            </svg>
+            In vé tham quan (PDF)
+          </button>
+          <a href="./index.html" class="btn btn-primary" id="home-link">Quay lại Trang chủ</a>
+        </div>
+      </div>
+    </div>
+  </main>
+
+  <footer>
+    <div class="container footer-grid">
+      <div class="footer-col">
+        <div class="footer-logo">
+          <svg viewBox="0 0 24 24"><path d="M12 2L2 22h20L12 2zm0 3.99L19.53 19H4.47L12 5.99zM13 16h-2v-2h2v2zm0-4h-2V8h2v4z"/></svg>
+          <span>E-Museum Ticket</span>
+        </div>
+        <p>Hệ thống bán vé tham quan và bảo tàng trực tuyến hàng đầu Việt Nam. Khám phá lịch sử, nghệ thuật và di sản dân tộc dễ dàng.</p>
+      </div>
+      <div class="footer-col">
+        <h4>Liên kết nhanh</h4>
+        <ul>
+          <li><a href="./index.html">Trang chủ</a></li>
+          <li><a href="./locations.html">Địa điểm</a></li>
+          <li><a href="./my-tickets.html">Vé của tôi</a></li>
+        </ul>
+      </div>
+      <div class="footer-col">
+        <h4>Địa điểm nổi bật</h4>
+        <ul>
+          <li><a href="./museum-detail.html?id=lich-su">Bảo Tàng Lịch Sử</a></li>
+          <li><a href="./museum-detail.html?id=my-thuat">Bảo Tàng Mỹ Thuật</a></li>
+          <li><a href="./museum-detail.html?id=dan-toc-hoc">Bảo Tàng Dân Tộc Học</a></li>
+        </ul>
+      </div>
+      <div class="footer-col">
+        <h4>Liên hệ hỗ trợ</h4>
+        <ul>
+          <li style="display: flex; align-items: center; gap: 8px;">
+            <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" style="flex-shrink: 0;"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72 12.84 12.84 0 0 0 .7 2.81 2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45 12.84 12.84 0 0 0 2.81.7A2 2 0 0 1 22 16.92z"></path></svg>
+            <span>Hotline: 1900 1234</span>
+          </li>
+          <li style="display: flex; align-items: center; gap: 8px;">
+            <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" style="flex-shrink: 0;"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"></path><polyline points="22,6 12,13 2,6"></polyline></svg>
+            <span>Email: support@emuseum.vn</span>
+          </li>
+          <li style="display: flex; align-items: center; gap: 8px;">
+            <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" style="flex-shrink: 0;"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"></path><circle cx="12" cy="10" r="3"></circle></svg>
+            <span>Địa chỉ: Hoàn Kiếm, Hà Nội</span>
+          </li>
+        </ul>
+      </div>
+    </div>
+    <div class="container footer-bottom">
+      <p>&copy; 2026 E-Museum Ticket. Bảo lưu mọi quyền.</p>
+      <p>Thiết kế bởi Team CSE703072</p>
+    </div>
+  </footer>
+
+  <script src="./js/storage.js"></script>
+  <script src="./js/utils.js"></script>
+  <script src="./js/api.js"></script>
+  <script src="./js/main.js"></script>
+  <script src="./js/ticket.js"></script>
+</body>
+</html>

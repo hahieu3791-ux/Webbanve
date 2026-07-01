@@ -1,0 +1,278 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Đặt Vé Tham Quan - E-Museum Ticket</title>
+  <meta name="description" content="Chọn ngày, khung giờ và số lượng vé tham quan bảo tàng. Đặt vé nhanh chóng, thanh toán tiện lợi.">
+  <link rel="stylesheet" href="./css/variables.css">
+  <link rel="stylesheet" href="./css/style.css">
+  <link rel="stylesheet" href="./css/components.css">
+  <link rel="stylesheet" href="./css/responsive.css">
+  <link rel="stylesheet" href="./css/booking.css">
+</head>
+<body>
+
+  <header>
+    <div class="container nav-container">
+      <a href="./index.html" class="logo">
+        <svg viewBox="0 0 24 24"><path d="M12 2L2 22h20L12 2zm0 3.99L19.53 19H4.47L12 5.99zM13 16h-2v-2h2v2zm0-4h-2V8h2v4z"/></svg>
+        <span>E-Museum Ticket</span>
+      </a>
+      <ul class="nav-links">
+        <li><a href="./index.html" class="nav-link">Trang chủ</a></li>
+        <li><a href="./locations.html" class="nav-link">Địa điểm</a></li>
+        <li><a href="./locations.html?filter=favorites" class="nav-link">Bảo tàng yêu thích</a></li>
+        <li><a href="./my-tickets.html" class="nav-link">Vé của tôi</a></li>
+      </ul>
+      <div class="nav-auth"></div>
+      <button class="menu-toggle" aria-label="Toggle Menu">
+        <span></span><span></span><span></span>
+      </button>
+    </div>
+  </header>
+
+  <div class="nav-overlay"></div>
+
+  <nav class="mobile-nav">
+    <ul class="mobile-links">
+      <li><a href="./index.html" class="mobile-link">Trang chủ</a></li>
+      <li><a href="./locations.html" class="mobile-link">Địa điểm</a></li>
+      <li><a href="./locations.html?filter=favorites" class="mobile-link">Bảo tàng yêu thích</a></li>
+      <li><a href="./my-tickets.html" class="mobile-link">Vé của tôi</a></li>
+    </ul>
+    <div class="mobile-auth"></div>
+  </nav>
+
+  <main class="container">
+    
+    <div id="booking-error-container" class="empty-state" style="display: none; margin-top: 40px;">
+      <svg class="empty-icon" viewBox="0 0 24 24"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm1 15h-2v-2h2v2zm0-4h-2V7h2v6z"/></svg>
+      <h3>Không tìm thấy địa điểm bảo tàng</h3>
+      <p>Địa điểm bạn muốn đặt vé không tồn tại hoặc đã bị gỡ bỏ.</p>
+      <a href="./locations.html" class="btn btn-primary">Quay lại danh sách địa điểm</a>
+    </div>
+
+    
+    <div id="booking-content-container" style="display: none;">
+
+      
+      <nav class="breadcrumb" aria-label="Breadcrumb">
+        <a href="./index.html">Trang chủ</a>
+        <span>›</span>
+        <a href="./locations.html">Địa điểm</a>
+        <span>›</span>
+        <a id="breadcrumb-detail-link" href="#">Chi tiết</a>
+        <span>›</span>
+        <span>Đặt vé</span>
+      </nav>
+
+      
+      <div class="museum-mini-card" id="museum-mini-header">
+        <img id="museum-mini-img" src="" alt="" class="museum-mini-img">
+        <div class="museum-mini-info">
+          <span id="museum-mini-category" class="badge badge-info" style="font-size:0.72rem; margin-bottom:6px;"></span>
+          <h3 id="museum-mini-name"></h3>
+          <p id="museum-mini-rating"></p>
+        </div>
+      </div>
+
+      <div class="booking-layout">
+
+        
+        <section class="booking-form-col">
+          <form id="booking-form">
+
+            
+            <div class="form-section-card">
+              <div class="form-section-title" style="display: flex; align-items: center; gap: 8px;">
+                <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" style="color: var(--color-success); flex-shrink: 0;"><rect x="3" y="4" width="18" height="18" rx="2" ry="2"></rect><line x1="16" y1="2" x2="16" y2="6"></line><line x1="8" y1="2" x2="8" y2="6"></line><line x1="3" y1="10" x2="21" y2="10"></line></svg>
+                Bước 1: Chọn ngày & khung giờ
+              </div>
+
+              <div class="form-group">
+                <label for="booking-date" class="form-label">Ngày tham quan</label>
+                <input type="date" id="booking-date" class="input-field" required>
+                <div class="form-error" id="error-date">Vui lòng chọn ngày tham quan.</div>
+              </div>
+
+              <div class="form-group">
+                <label class="form-label">Khung giờ vào cổng</label>
+                <div class="time-slot-grid" id="booking-time-slots">
+                  <div style="grid-column: 1 / -1; text-align: center; padding: 20px; color: var(--color-text-muted); font-size: 0.9rem;">
+                    <div class="spinner" style="margin: 0 auto 10px auto;"></div>
+                    Đang tải khung giờ...
+                  </div>
+                </div>
+                <div id="selected-slot-info" style="display: none; margin-top: 12px; padding: 12px; background: rgba(16, 185, 129, 0.05); border: 1.5px solid rgba(16, 185, 129, 0.15); border-radius: var(--radius-sm); font-size: 0.88rem; color: var(--color-success); font-weight: 600; text-align: center; align-items: center; justify-content: center; gap: 6px;">
+                  <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" style="flex-shrink: 0;"><rect x="3" y="4" width="18" height="18" rx="2" ry="2"></rect><line x1="16" y1="2" x2="16" y2="6"></line><line x1="8" y1="2" x2="8" y2="6"></line><line x1="3" y1="10" x2="21" y2="10"></line></svg>
+                  <span>Đã chọn khung giờ <span id="slot-info-time" style="font-weight: 800;"></span> ngày <span id="slot-info-date" style="font-weight: 800;"></span> (Còn lại <span id="slot-info-remaining" style="font-weight: 800;"></span> vé)</span>
+                </div>
+                <div class="form-error" id="error-time-slot" style="margin-top: 10px;">Vui lòng chọn khung giờ tham quan.</div>
+              </div>
+            </div>
+
+            
+            <div class="form-section-card">
+              <div class="form-section-title" style="display: flex; align-items: center; gap: 8px;">
+                <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" style="color: var(--color-success); flex-shrink: 0;"><path d="M2 9a3 3 0 0 1 0 6v2a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2v-2a3 3 0 0 1 0-6V7a2 2 0 0 0-2-2H4a2 2 0 0 0-2 2Z"></path><path d="M13 5v14"></path></svg>
+                Bước 2: Chọn số lượng vé
+              </div>
+              <div id="ticket-types-container">
+                
+              </div>
+              <div class="form-error" id="error-qty">Vui lòng chọn ít nhất 1 vé tham quan.</div>
+            </div>
+
+            
+            <div class="form-section-card">
+              <div class="form-section-title" style="display: flex; align-items: center; gap: 8px;">
+                <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" style="color: var(--color-success); flex-shrink: 0;"><path d="M20.59 13.41l-7.17 7.17a2 2 0 0 1-2.83 0L2 12V2h10l8.59 8.59a2 2 0 0 1 0 2.82z"></path><line x1="7" y1="7" x2="7.01" y2="7"></line></svg>
+                Mã giảm giá (tuỳ chọn)
+              </div>
+              <div class="coupon-row">
+                <input type="text" id="coupon-input" class="input-field" placeholder="Nhập mã: SUMMER10, WELCOME20..." maxlength="20">
+                <button type="button" id="apply-coupon-btn" class="btn btn-secondary">Áp dụng</button>
+              </div>
+              <div class="coupon-result" id="coupon-result"></div>
+            </div>
+
+            
+            <div class="form-section-card">
+              <div class="form-section-title" style="display: flex; align-items: center; gap: 8px;">
+                <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" style="color: var(--color-success); flex-shrink: 0;"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path><circle cx="12" cy="7" r="4"></circle></svg>
+                Bước 3: Thông tin người đặt vé
+              </div>
+
+              <div class="form-group">
+                <label for="customer-name" class="form-label">Họ và tên <span style="color: var(--color-error);">*</span></label>
+                <input type="text" id="customer-name" class="input-field" placeholder="Nhập họ và tên người nhận vé" required>
+                <div class="form-error" id="error-customer-name">Họ tên không được để trống.</div>
+              </div>
+
+              <div class="grid-2" style="gap: 20px; margin-bottom: 0;">
+                <div class="form-group" style="margin-bottom: 0;">
+                  <label for="customer-phone" class="form-label">Số điện thoại <span style="color: var(--color-error);">*</span></label>
+                  <input type="tel" id="customer-phone" class="input-field" placeholder="0987654321" required>
+                  <div class="form-error" id="error-customer-phone">Số điện thoại không hợp lệ.</div>
+                </div>
+                <div class="form-group" style="margin-bottom: 0;">
+                  <label for="customer-email" class="form-label">Email <span style="color: var(--color-error);">*</span></label>
+                  <input type="email" id="customer-email" class="input-field" placeholder="email@example.com" required>
+                  <div class="form-error" id="error-customer-email">Vui lòng nhập email hợp lệ.</div>
+                </div>
+              </div>
+            </div>
+
+            
+            <button type="submit" class="btn btn-primary btn-block" id="booking-submit-btn"
+              style="padding: 16px; font-size: 1.05rem; margin-top: 4px;">
+              Xác nhận & Tiến hành thanh toán →
+            </button>
+          </form>
+        </section>
+
+        
+        <aside class="booking-sidebar">
+          <div class="price-summary-card">
+            <div class="price-summary-title" style="display: flex; align-items: center; gap: 8px;">
+              <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" style="color: var(--color-success); flex-shrink: 0;"><line x1="12" y1="1" x2="12" y2="23"></line><path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"></path></svg>
+              Tóm tắt chi phí
+            </div>
+
+            <div id="price-lines-container">
+              <div class="price-line">
+                <span style="color: var(--color-text-muted); font-style: italic;">Chọn vé để xem giá...</span>
+              </div>
+            </div>
+
+            <div id="coupon-discount-row" class="price-discount-row" style="display: none;">
+              <span style="display: flex; align-items: center; gap: 6px;">
+                <svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20.59 13.41l-7.17 7.17a2 2 0 0 1-2.83 0L2 12V2h10l8.59 8.59a2 2 0 0 1 0 2.82z"></path><line x1="7" y1="7" x2="7.01" y2="7"></line></svg>
+                Giảm giá coupon
+              </span>
+              <span id="price-discount">-0đ</span>
+            </div>
+
+            <div class="price-total-row">
+              <span>Tổng cộng:</span>
+              <span id="price-grand-total">0 VND</span>
+            </div>
+
+            <div id="service-fee-note" style="font-size: 0.78rem; color: var(--color-text-muted); margin-top: 8px; text-align: center;">
+              Đã bao gồm phí dịch vụ 5.000đ
+            </div>
+
+            <div style="margin-top: 16px; font-size: 0.8rem; text-align: center; color: var(--color-text-muted); line-height: 1.5; display: flex; flex-direction: column; gap: 6px;">
+              <div style="display: flex; align-items: center; justify-content: center; gap: 6px;">
+                <svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"></circle><polyline points="12 6 12 12 16 14"></polyline></svg>
+                <span>Vé được giữ <strong>15 phút</strong> sau khi đặt</span>
+              </div>
+              <div style="display: flex; align-items: center; justify-content: center; gap: 6px;">
+                <svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"></rect><path d="M7 11V7a5 5 0 0 1 10 0v4"></path></svg>
+                <span>Thanh toán bảo mật qua VietQR</span>
+              </div>
+            </div>
+          </div>
+        </aside>
+
+      </div>
+    </div>
+  </main>
+
+  <footer>
+    <div class="container footer-grid">
+      <div class="footer-col">
+        <div class="footer-logo">
+          <svg viewBox="0 0 24 24"><path d="M12 2L2 22h20L12 2zm0 3.99L19.53 19H4.47L12 5.99zM13 16h-2v-2h2v2zm0-4h-2V8h2v4z"/></svg>
+          <span>E-Museum Ticket</span>
+        </div>
+        <p>Hệ thống bán vé tham quan và bảo tàng trực tuyến hàng đầu Việt Nam.</p>
+      </div>
+      <div class="footer-col">
+        <h4>Liên kết nhanh</h4>
+        <ul>
+          <li><a href="./index.html">Trang chủ</a></li>
+          <li><a href="./locations.html">Địa điểm</a></li>
+          <li><a href="./my-tickets.html">Vé của tôi</a></li>
+        </ul>
+      </div>
+      <div class="footer-col">
+        <h4>Địa điểm nổi bật</h4>
+        <ul>
+          <li><a href="./museum-detail.html?id=lich-su">Bảo Tàng Lịch Sử</a></li>
+          <li><a href="./museum-detail.html?id=dan-toc-hoc">Bảo Tàng Dân Tộc Học</a></li>
+          <li><a href="./museum-detail.html?id=hoang-thanh-thang-long">Hoàng Thành Thăng Long</a></li>
+        </ul>
+      </div>
+      <div class="footer-col">
+        <h4>Liên hệ hỗ trợ</h4>
+        <ul>
+          <li style="display: flex; align-items: center; gap: 8px;">
+            <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" style="flex-shrink: 0;"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72 12.84 12.84 0 0 0 .7 2.81 2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45 12.84 12.84 0 0 0 2.81.7A2 2 0 0 1 22 16.92z"></path></svg>
+            <span>Hotline: 1900 1234</span>
+          </li>
+          <li style="display: flex; align-items: center; gap: 8px;">
+            <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" style="flex-shrink: 0;"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"></path><polyline points="22,6 12,13 2,6"></polyline></svg>
+            <span>Email: support@emuseum.vn</span>
+          </li>
+          <li style="display: flex; align-items: center; gap: 8px;">
+            <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" style="flex-shrink: 0;"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"></path><circle cx="12" cy="10" r="3"></circle></svg>
+            <span>Địa chỉ: Hoàn Kiếm, Hà Nội</span>
+          </li>
+        </ul>
+      </div>
+    </div>
+    <div class="container footer-bottom">
+      <p>&copy; 2026 E-Museum Ticket. Bảo lưu mọi quyền.</p>
+      <p>Thiết kế bởi Team CSE703072</p>
+    </div>
+  </footer>
+
+  <script src="./js/storage.js"></script>
+  <script src="./js/utils.js"></script>
+  <script src="./js/api.js"></script>
+  <script src="./js/main.js"></script>
+  <script src="./js/booking.js"></script>
+</body>
+</html>

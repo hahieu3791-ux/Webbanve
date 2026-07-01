@@ -1,0 +1,296 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Thanh Toán - E-Museum Ticket</title>
+  <meta name="description" content="Xác nhận và thanh toán vé tham quan bảo tàng qua mã QR VietQR nhanh chóng, bảo mật.">
+  <link rel="stylesheet" href="./css/variables.css">
+  <link rel="stylesheet" href="./css/style.css">
+  <link rel="stylesheet" href="./css/components.css">
+  <link rel="stylesheet" href="./css/responsive.css">
+  <link rel="stylesheet" href="./css/payment.css">
+</head>
+<body>
+
+  <header>
+    <div class="container nav-container">
+      <a href="./index.html" class="logo">
+        <svg viewBox="0 0 24 24"><path d="M12 2L2 22h20L12 2zm0 3.99L19.53 19H4.47L12 5.99zM13 16h-2v-2h2v2zm0-4h-2V8h2v4z"/></svg>
+        <span>E-Museum Ticket</span>
+      </a>
+      <ul class="nav-links">
+        <li><a href="./index.html" class="nav-link">Trang chủ</a></li>
+        <li><a href="./locations.html" class="nav-link">Địa điểm</a></li>
+        <li><a href="./locations.html?filter=favorites" class="nav-link">Bảo tàng yêu thích</a></li>
+        <li><a href="./my-tickets.html" class="nav-link">Vé của tôi</a></li>
+      </ul>
+      <div class="nav-auth"></div>
+      <button class="menu-toggle" aria-label="Toggle Menu">
+        <span></span><span></span><span></span>
+      </button>
+    </div>
+  </header>
+
+  <div class="nav-overlay"></div>
+
+  <nav class="mobile-nav">
+    <ul class="mobile-links">
+      <li><a href="./index.html" class="mobile-link">Trang chủ</a></li>
+      <li><a href="./locations.html" class="mobile-link">Địa điểm</a></li>
+      <li><a href="./locations.html?filter=favorites" class="mobile-link">Bảo tàng yêu thích</a></li>
+      <li><a href="./my-tickets.html" class="mobile-link">Vé của tôi</a></li>
+    </ul>
+    <div class="mobile-auth"></div>
+  </nav>
+
+  
+  <div class="spinner-overlay" id="payment-loader">
+    <div class="spinner"></div>
+    <div class="spinner-text" id="loader-status">Đang xử lý giao dịch...</div>
+  </div>
+
+  
+  <div class="payment-modal" id="qr-payment-modal">
+    <div class="payment-modal-card">
+      <h3 class="modal-title" style="display: flex; align-items: center; justify-content: center; gap: 8px;">
+        <svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" style="color: var(--color-success);"><rect x="5" y="2" width="14" height="20" rx="2" ry="2"></rect><line x1="12" y1="18" x2="12.01" y2="18"></line></svg>
+        Quét Mã QR Thanh Toán
+      </h3>
+      <p class="modal-desc">Mở ứng dụng ngân hàng và quét mã VietQR bên dưới để thanh toán.<br>
+        Hệ thống sẽ tự động xác nhận trong vài giây sau khi nhận được giao dịch.</p>
+
+      <div class="qr-wrapper">
+        <div id="payment-qr-container">
+          <div class="spinner" style="margin: 30px auto;"></div>
+        </div>
+
+        <div class="bank-details">
+          <div class="bank-detail-row">
+            <label>Ngân hàng:</label>
+            <span id="qr-bank-name">MB Bank</span>
+          </div>
+          <div class="bank-detail-row">
+            <label>Số tài khoản:</label>
+            <span id="qr-account-no">999912345678</span>
+          </div>
+          <div class="bank-detail-row">
+            <label>Chủ tài khoản:</label>
+            <span id="qr-account-name">E-MUSEUM TICKET</span>
+          </div>
+          <div class="bank-detail-row">
+            <label>Số tiền:</label>
+            <span id="qr-amount" style="color:var(--color-success); font-size:1rem;">0đ</span>
+          </div>
+          <div class="bank-detail-row">
+            <label>Nội dung CK:</label>
+            <span id="qr-memo" class="memo-content"></span>
+          </div>
+        </div>
+      </div>
+
+      <div class="waiting-indicator">
+        <div class="spinner-small"></div>
+        <span>Đang chờ xác nhận giao dịch...</span>
+      </div>
+
+      <div class="modal-actions">
+        <button class="btn btn-secondary btn-block" id="cancel-payment-btn">Hủy giao dịch</button>
+        <button class="btn btn-primary btn-block" id="confirm-payment-btn" style="display: flex; align-items: center; justify-content: center; gap: 6px;">
+          <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"></polyline></svg>
+          Tôi đã thanh toán
+        </button>
+      </div>
+    </div>
+  </div>
+
+  
+  <div class="payment-modal" id="limit-warning-modal">
+    <div class="payment-modal-card">
+      <h3 class="modal-title" style="display: flex; align-items: center; justify-content: center; gap: 8px; color: var(--color-error);">
+        <svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" style="color: var(--color-error);"><path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"></path><line x1="12" y1="9" x2="12" y2="13"></line><line x1="12" y1="17" x2="12.01" y2="17"></line></svg>
+        Vượt Quá Giới Hạn Đặt Vé
+      </h3>
+      <p class="modal-desc" id="limit-warning-message" style="margin-top: 14px; font-size: 0.95rem; line-height: 1.5; color: var(--color-text);"></p>
+      <div class="modal-actions" style="margin-top: 24px;">
+        <a href="./locations.html" class="btn btn-secondary btn-block">Đổi ngày / địa điểm</a>
+        <button class="btn btn-primary btn-block" id="close-limit-modal-btn">Quay lại</button>
+      </div>
+    </div>
+  </div>
+
+  <main class="container">
+    
+    <div id="payment-error-container" class="empty-state" style="display: none; margin-top: 40px;">
+      <svg class="empty-icon" viewBox="0 0 24 24"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm1 15h-2v-2h2v2zm0-4h-2V7h2v6z"/></svg>
+      <h3>Không tìm thấy thông tin đơn hàng</h3>
+      <p>Đơn hàng không tồn tại hoặc đã hết hạn. Vui lòng đặt vé lại.</p>
+      <a href="./locations.html" class="btn btn-primary">Chọn địa điểm & Đặt vé</a>
+    </div>
+
+    
+    <div id="payment-content-container" style="display: none;">
+
+      
+      <nav class="breadcrumb" aria-label="Breadcrumb">
+        <a href="./index.html">Trang chủ</a>
+        <span>›</span>
+        <a href="./locations.html">Địa điểm</a>
+        <span>›</span>
+        <a id="breadcrumb-booking-link" href="#">Đặt vé</a>
+        <span>›</span>
+        <span>Thanh toán</span>
+      </nav>
+
+      <div class="payment-layout">
+
+        
+        <section class="payment-main">
+          
+          <div class="timer-banner">
+            <span style="display: flex; align-items: center; gap: 6px;">
+              <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="color: var(--color-warning); flex-shrink: 0;"><circle cx="12" cy="12" r="10"></circle><polyline points="12 6 12 12 16 14"></polyline></svg>
+              Vé đang được giữ trong:
+            </span>
+            <span class="timer-countdown" id="payment-timer">15:00</span>
+          </div>
+
+          
+          <div class="card" style="padding: 28px; margin-bottom: 0;">
+            <h3 style="font-size:1.05rem; font-weight:700; color:var(--color-primary); margin-bottom:6px;">
+              Chọn phương thức thanh toán
+            </h3>
+            <p style="font-size:0.85rem; color:var(--color-text-muted); margin-bottom:4px;">
+              Chọn cách thanh toán phù hợp với bạn
+            </p>
+
+            <div class="payment-methods-grid" id="payment-methods-grid">
+              
+            </div>
+
+            <button id="proceed-payment-btn" class="btn btn-primary btn-block"
+              style="margin-top: 28px; padding: 15px; font-size: 1rem; display: flex; align-items: center; justify-content: center; gap: 6px;">
+              <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" style="flex-shrink: 0;"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"></rect><path d="M7 11V7a5 5 0 0 1 10 0v4"></path></svg>
+              Xác nhận & Thanh toán
+            </button>
+          </div>
+        </section>
+
+        
+        <aside class="payment-sidebar">
+          <div class="order-summary-card">
+            <div class="summary-title" style="display: flex; align-items: center; gap: 8px;">
+              <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" style="color: var(--color-success); flex-shrink: 0;"><path d="M16 4h2a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2h2"></path><rect x="8" y="2" width="8" height="4" rx="1" ry="1"></rect></svg>
+              Tóm tắt đơn hàng
+            </div>
+
+            <div class="summary-item">
+              <label>Mã đơn hàng:</label>
+              <span id="sum-booking-code" style="color:var(--color-success);"></span>
+            </div>
+
+            <div class="summary-item">
+              <label>Địa điểm:</label>
+              <span id="sum-museum-name"></span>
+            </div>
+
+            <div class="summary-item">
+              <label>Ngày tham quan:</label>
+              <span id="sum-visit-date"></span>
+            </div>
+
+            <div class="summary-item">
+              <label>Khung giờ:</label>
+              <span id="sum-slot-display"></span>
+            </div>
+
+            <div class="summary-item">
+              <label>Khách hàng:</label>
+              <span id="sum-customer-name"></span>
+            </div>
+
+            <hr class="summary-divider">
+
+            <div id="sum-items-list">
+              
+            </div>
+
+            <div class="summary-item" id="sum-discount-row" style="display:none;">
+              <label>Giảm giá:</label>
+              <span id="sum-discount" style="color:var(--color-success);"></span>
+            </div>
+
+            <div class="summary-item">
+              <label>Phí dịch vụ:</label>
+              <span id="sum-service-fee"></span>
+            </div>
+
+            <hr class="summary-divider">
+
+            <div class="summary-total">
+              <span>Cần thanh toán:</span>
+              <span id="sum-grand-total"></span>
+            </div>
+          </div>
+        </aside>
+
+      </div>
+    </div>
+  </main>
+
+  <footer>
+    <div class="container footer-grid">
+      <div class="footer-col">
+        <div class="footer-logo">
+          <svg viewBox="0 0 24 24"><path d="M12 2L2 22h20L12 2zm0 3.99L19.53 19H4.47L12 5.99zM13 16h-2v-2h2v2zm0-4h-2V8h2v4z"/></svg>
+          <span>E-Museum Ticket</span>
+        </div>
+        <p>Hệ thống bán vé tham quan và bảo tàng trực tuyến hàng đầu Việt Nam.</p>
+      </div>
+      <div class="footer-col">
+        <h4>Liên kết nhanh</h4>
+        <ul>
+          <li><a href="./index.html">Trang chủ</a></li>
+          <li><a href="./locations.html">Địa điểm</a></li>
+          <li><a href="./my-tickets.html">Vé của tôi</a></li>
+        </ul>
+      </div>
+      <div class="footer-col">
+        <h4>Địa điểm nổi bật</h4>
+        <ul>
+          <li><a href="./museum-detail.html?id=lich-su">Bảo Tàng Lịch Sử</a></li>
+          <li><a href="./museum-detail.html?id=dan-toc-hoc">Bảo Tàng Dân Tộc Học</a></li>
+          <li><a href="./museum-detail.html?id=hoang-thanh-thang-long">Hoàng Thành Thăng Long</a></li>
+        </ul>
+      </div>
+      <div class="footer-col">
+        <h4>Liên hệ hỗ trợ</h4>
+        <ul>
+          <li style="display: flex; align-items: center; gap: 8px;">
+            <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" style="flex-shrink: 0;"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72 12.84 12.84 0 0 0 .7 2.81 2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45 12.84 12.84 0 0 0 2.81.7A2 2 0 0 1 22 16.92z"></path></svg>
+            <span>Hotline: 1900 1234</span>
+          </li>
+          <li style="display: flex; align-items: center; gap: 8px;">
+            <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" style="flex-shrink: 0;"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"></path><polyline points="22,6 12,13 2,6"></polyline></svg>
+            <span>Email: support@emuseum.vn</span>
+          </li>
+          <li style="display: flex; align-items: center; gap: 8px;">
+            <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" style="flex-shrink: 0;"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"></path><circle cx="12" cy="10" r="3"></circle></svg>
+            <span>Địa chỉ: Hoàn Kiếm, Hà Nội</span>
+          </li>
+        </ul>
+      </div>
+    </div>
+    <div class="container footer-bottom">
+      <p>&copy; 2026 E-Museum Ticket. Bảo lưu mọi quyền.</p>
+      <p>Thiết kế bởi Team CSE703072</p>
+    </div>
+  </footer>
+
+  <script src="./js/storage.js"></script>
+  <script src="./js/utils.js"></script>
+  <script src="./js/api.js"></script>
+  <script src="./js/main.js"></script>
+  <script src="./js/payment.js"></script>
+</body>
+</html>
